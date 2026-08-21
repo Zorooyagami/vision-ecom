@@ -10,7 +10,8 @@ const ALLOWED_ROUTES = [
 ]
 
 const FLUSH_INTERVAL_MS = 5000
-const API_URL = "http://localhost:4000/api/record/ingest";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+const API_URL = `${API_BASE_URL}/api/record/ingest`;
 
 class SessionRecorder {
   constructor() {

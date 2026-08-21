@@ -14,6 +14,7 @@ import { useSessionRecording } from './hooks/useSessionRecording'
 // App.jsx — add the route
 import SessionReplay from './pages/SessionReplay'
 import UserSessions from './pages/UserSessions'
+import RecordedUsers from './pages/RecordedUsers'
 
 
 function Footer() {
@@ -50,7 +51,9 @@ export default function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/replay-test" element={<SessionReplay />} />
-          <Route path="/user-sessions" element={<UserSessions />} />
+          <Route path="/replay/:sessionId" element={<SessionReplay />} />
+          <Route path="/user-sessions/:userId" element={<UserSessions />} />
+          <Route path="/recorded-users" element={<RecordedUsers />} />
           <Route
             path="/payment"
             element={

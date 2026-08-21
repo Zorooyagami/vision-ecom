@@ -2,11 +2,11 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 
-const API_BASE = "http://localhost:4000/api/record"
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+const API_BASE = `${API_BASE_URL}/api/record`
 
 export default function UserSessions() {
-  // const { userId } = useParams()
-  let userId = '5ae50b0c3a5b6dfc'
+  const { userId } = useParams()
   const [sessions, setSessions] = useState([])
 
   useEffect(() => {

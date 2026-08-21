@@ -1,8 +1,9 @@
 // src/pages/RecordedUsers.jsx — the list view
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
-const API_BASE = "http://localhost:4000/api/record"
+const API_BASE = `${API_BASE_URL}/api/record`
 
 export default function RecordedUsers() {
   const [users, setUsers] = useState([])
@@ -23,7 +24,7 @@ export default function RecordedUsers() {
         <tbody>
           {users.map((u) => (
             <tr key={u.userId}>
-              <td><Link to={`/admin/users/${u.userId}`}>{u.userId}</Link></td>
+              <td><Link to={`/user-sessions/${u.userId}`}>{u.userId}</Link></td>
               <td>{u.sessionCount}</td>
               <td>{new Date(u.lastActivity).toLocaleString()}</td>
             </tr>

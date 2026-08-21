@@ -9,7 +9,8 @@ const { sessionId } = useParams()
   const containerRef = useRef(null)
   const playerRef = useRef(null)
   const [status, setStatus] = useState('loading') // loading | ready | error | empty
-const API_BASE = "http://localhost:4000/api/record";
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+  const API_BASE = `${API_BASE_URL}/api/record`;
 
   useEffect(() => {
     let cancelled = false
