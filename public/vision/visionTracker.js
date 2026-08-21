@@ -45,7 +45,6 @@
   // Check URL periodically as a fallback for SPA navigation.
   const ROUTE_CHECK_INTERVAL_MS = 250;
 
-
   // =====================================================================
   // ID GENERATION
   // =====================================================================
@@ -637,33 +636,135 @@
     ROUTE_CHECK_INTERVAL_MS
   );
 
+// =====================================================================
+// HEATMAP TRACKING
+// =====================================================================
 
+const HEATMAP_CONFIG = {
+  enabled: true,
+  mouseMoveThrottle: 100,
+  minMoveDistance: 8,
+};
+
+// recorder.js — wherever getNormalizedCoordinates lives
+function getNormalizedCoordinates(event) {
+  // pick a stable container that wraps just the PDP/page content — NOT header/footer
+  const container = document.querySelector('main') || document.body
+  const rect = container.getBoundingClientRect()
+  const containerHeight = container.scrollHeight
+
+  return {
+    x: Number(((event.clientX - rect.left) / rect.width).toFixed(4)),
+    y: Number((((event.clientY - rect.top) + window.scrollY) / containerHeight).toFixed(4)),
+  }
+}
+
+
+// ---------------------------------------------------------------------
+// CLICK TRACKING
+// ---------------------------------------------------------------------
+
+function setupHeatmapClickTracking() {
+  document.addEventListener("click", (event) => {
+    const { x, y } =
+      getNormalizedCoordinates(event);
+
+    track("heatmap_click", {
+      x,
+      y,
+       page: location.pathname,   //
+      viewportWidth:
+        window.innerWidth,
+
+      viewportHeight:
+        window.innerHeight,
+
+      pageHeight:
+        document.documentElement.scrollHeight,
+    });
+  });
+}
+
+
+// ---------------------------------------------------------------------
+// MOUSE MOVEMENT TRACKING
+// ---------------------------------------------------------------------
+
+function setupHeatmapMoveTracking() {
+  let lastX = 0;
+  let lastY = 0;
+  let lastTrackedAt = 0;
+
+  document.addEventListener("mousemove", (event) => {
+    const now = Date.now();
+
+    if (
+      now - lastTrackedAt <
+      HEATMAP_CONFIG.mouseMoveThrottle
+    ) {
+      return;
+    }
+
+    const distance = Math.sqrt(
+      Math.pow(event.clientX - lastX, 2) +
+      Math.pow(event.clientY - lastY, 2)
+    );
+
+    if (
+      distance <
+      HEATMAP_CONFIG.minMoveDistance
+    ) {
+      return;
+    }
+
+    lastX = event.clientX;
+    lastY = event.clientY;
+    lastTrackedAt = now;
+
+    const { x, y } =
+      getNormalizedCoordinates(event);
+
+    track("heatmap_move", {
+      x,
+      y,
+      page: location.pathname,
+      viewportWidth:
+        window.innerWidth,
+
+      viewportHeight:
+        window.innerHeight,
+
+      pageHeight:
+        document.documentElement.scrollHeight,
+    });
+  });
+}
   // =====================================================================
   // INITIAL PAGE VIEW
   // =====================================================================
 
-  function init() {
-    console.log(
-      "[Vision Tracker] initialized"
-    );
+ function init() {
+  console.log(
+    "[Vision Tracker] initialized"
+  );
 
-    console.log(
-      "[Vision Tracker] sessionId:",
-      getSessionId()
-    );
+  console.log(
+    "[Vision Tracker] sessionId:",
+    getSessionId()
+  );
 
-    console.log(
-      "[Vision Tracker] userId:",
-      getUserId()
-    );
+  console.log(
+    "[Vision Tracker] userId:",
+    getUserId()
+  );
 
-    /*
-     * Initial page view.
-     */
+  trackPageView();
 
-    trackPageView();
+  if (HEATMAP_CONFIG.enabled) {
+    setupHeatmapClickTracking();
+    setupHeatmapMoveTracking();
   }
-
+}
 
   // =====================================================================
   // PUBLIC API
@@ -730,133 +831,4 @@
 })();
 
 
-// ========================================================================
-// EXAMPLE EVENTS
-// ========================================================================
-//
-// Product listing
-//
-// window.vision?.track(
-//   "view_item_list",
-//   {
-//     listId: "cat_shoes",
-//     listName: "Footwear",
-//     itemIds: ["p1", "p2", "p3"]
-//   }
-// );
-//
-//
-// Product selection
-//
-// window.vision?.track(
-//   "select_item",
-//   {
-//     productId: "p1",
-//     listId: "cat_shoes",
-//     position: 0
-//   }
-// );
-//
-//
-// Product detail
-//
-// window.vision?.track(
-//   "product_view",
-//   {
-//     productId: "p1",
-//     name: "Running Shoes",
-//     price: 1999,
-//     category: "Footwear"
-//   }
-// );
-//
-//
-// Add to cart
-//
-// window.vision?.track(
-//   "add_to_cart",
-//   {
-//     productId: "p1",
-//     price: 1999,
-//     quantity: 1,
-//     source: "product_page"
-//   }
-// );
-//
-//
-// Remove from cart
-//
-// window.vision?.track(
-//   "remove_from_cart",
-//   {
-//     productId: "p1",
-//     price: 1999,
-//     quantity: 1
-//   }
-// );
-//
-//
-// View cart
-//
-// window.vision?.track(
-//   "view_cart",
-//   {
-//     itemCount: 2,
-//     cartValue: 3998
-//   }
-// );
-//
-//
-// Checkout
-//
-// window.vision?.track(
-//   "checkout_start",
-//   {
-//     itemCount: 2,
-//     cartValue: 3998
-//   }
-// );
-//
-//
-// Payment
-//
-// window.vision?.track(
-//   "add_payment_info",
-//   {
-//     paymentMethod: "card"
-//   }
-// );
-//
-//
-// Purchase
-//
-// window.vision?.track(
-//   "purchase",
-//   {
-//     orderId: "ord_abc123",
-//     orderValue: 3998,
-//     items: [
-//       {
-//         productId: "p1",
-//         quantity: 1,
-//         price: 1999
-//       },
-//       {
-//         productId: "p2",
-//         quantity: 1,
-//         price: 1999
-//       }
-//     ],
-//     paymentMethod: "card"
-//   }
-// );
-//
-//
-// Order confirmation
-//
-// window.vision?.track(
-//   "order_confirmation",
-//   {
-//     orderId: "ord_abc123"
-//   }
-// );
+
