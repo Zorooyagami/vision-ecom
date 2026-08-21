@@ -1,0 +1,113 @@
+.login-page {
+  padding: 3rem 0 4rem;
+  display: flex;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 2.25rem 2rem;
+}
+
+.login-card h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+  text-align: center;
+}
+
+.subtitle {
+  text-align: center;
+  color: #64748b;
+  margin-bottom: 1.25rem;
+  font-size: 0.95rem;
+}
+
+.demo-hint {
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 0.8rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.login-card .form-group {
+  margin-bottom: 1rem;
+}
+
+.login-card label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #475569;
+  margin-bottom: 0.35rem;
+}
+
+.login-card input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.login-card input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.form-error {
+  background: #fef2f2;
+  color: #dc2626;
+  font-size: 0.875rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 0.85rem;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}
+
+.switch-mode {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.switch-mode button {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-weight: 600;
+  font-size: inherit;
+  padding: 0;
+  cursor: pointer;
+}
+
+.switch-mode button:hover {
+  text-decoration: underline;
+}
+
+.back-home {
+  display: block;
+  text-align: center;
+  margin-top: 1.25rem;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.back-home:hover {
+  color: #2563eb;
+}

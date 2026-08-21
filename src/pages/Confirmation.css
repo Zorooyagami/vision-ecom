@@ -1,0 +1,72 @@
+.confirmation-page {
+  padding: 3rem 0 4rem;
+  display: flex;
+  justify-content: center;
+}
+
+.confirmation-card {
+  max-width: 480px;
+  width: 100%;
+  padding: 2.5rem 2rem;
+  text-align: center;
+}
+
+.success-icon {
+  width: 72px;
+  height: 72px;
+  background: #dcfce7;
+  color: #16a34a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 auto 1.5rem;
+}
+
+.confirmation-card h1 {
+  font-size: 1.6rem;
+  margin-bottom: 0.75rem;
+}
+
+.thank-you {
+  color: #475569;
+  margin-bottom: 1.75rem;
+  line-height: 1.6;
+}
+
+.order-details {
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  font-size: 0.95rem;
+}
+
+.detail-row span {
+  color: #64748b;
+}
+
+.note {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin-bottom: 1.75rem;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.actions .btn {
+  width: 100%;
+}
