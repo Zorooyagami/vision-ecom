@@ -210,7 +210,75 @@
     return null;
   }
 
+  // =====================================================================
+  // device info tracking replaceState
+  // =====================================================================
 
+  const userAgent = navigator.userAgent;
+  const platform = navigator.platform;
+  
+  // Get OS
+  const getOS = () => {
+    const osMap = {
+      'Windows': /Windows/i,
+      'Mac OS': /Macintosh|Mac OS X/i,
+      'iOS': /iPhone|iPad|iPod/i,
+      'Android': /Android/i,
+      'Linux': /Linux/i,
+      'Chrome OS': /CrOS/i
+    };
+    
+    for (const [os, pattern] of Object.entries(osMap)) {
+      if (pattern.test(userAgent)) return os;
+    }
+    return 'Unknown';
+  };
+
+  // Get Browser
+  const getBrowser = () => {
+    const browserMap = {
+      'Chrome': /Chrome/i,
+      'Firefox': /Firefox/i,
+      'Safari': /Safari/i,
+      'Edge': /Edg/i,
+      'Opera': /OPR/i,
+      'Brave': /Brave/i,
+      'IE': /MSIE|Trident/i
+    };
+    
+    for (const [browser, pattern] of Object.entries(browserMap)) {
+      if (pattern.test(userAgent)) return browser;
+    }
+    return 'Unknown';
+  };
+
+  // Get Device Type
+  const getDeviceType = () => {
+    const ua = userAgent.toLowerCase();
+    if (/(tablet|ipad|playbook|kindle|silk)/i.test(ua)) return 'Tablet';
+    if (/(mobile|iphone|ipod|android|blackberry|windows phone)/i.test(ua)) return 'Mobile';
+    return 'Desktop';
+  };
+
+
+
+const deviceInfo = async  () =>  {
+  let info = {
+    userAgent,
+    platform,
+    os: getOS(),
+    browser: getBrowser(),
+    deviceType: getDeviceType(),
+    language: navigator.language || navigator.userLanguage,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    referrer: document.referrer || null,
+    url: window.location.href,
+    pathname: window.location.pathname,
+    search: window.location.search,
+    timestamp: new Date().toISOString()
+  };
+  return info
+};
   // =====================================================================
   // EVENT QUEUE
   // =====================================================================
@@ -222,10 +290,11 @@
   // CREATE EVENT
   // =====================================================================
 
-  function createEvent(
+  async function createEvent(
     eventName,
     properties
   ) {
+    let info = await deviceInfo()
     return {
       event: eventName,
 
@@ -249,6 +318,8 @@
 
       properties:
         properties || {},
+
+      deviceInfo : info
     };
   }
 
@@ -257,7 +328,7 @@
   // TRACK
   // =====================================================================
 
-  function track(
+  async function track(
     eventName,
     properties
   ) {
@@ -270,7 +341,7 @@
     }
 
     const eventObject =
-      createEvent(
+      await createEvent(
         eventName,
         properties
       );
@@ -583,7 +654,6 @@
       );
     };
 
-
   // =====================================================================
   // PATCH replaceState
   // =====================================================================
@@ -827,7 +897,6 @@ function setupHeatmapMoveTracking() {
   // =====================================================================
 
   init();
-
 })();
 
 

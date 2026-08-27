@@ -45,17 +45,59 @@ export default function Payment() {
     if (!form.address.trim()) next.address = 'Address is required'
     if (!form.city.trim()) next.city = 'City is required'
     if (!form.zip.trim()) next.zip = 'ZIP is required'
+    
+    // Set errors
+    setErrors(next)
     return Object.keys(next).length === 0
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    
+    // Validate form
     if (!validate()) return
 
     setProcessing(true)
-    // Simulate payment processing
-    
+
+    try {
+      // Calculate total items count
+      const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
+
+      // Track shipping details event
+      if (window.vision?.track) {
+        window.vision.track('shipping_details', {
+          title: document.title,
+          screenWidth: window.innerWidth,
+          screenHeight: window.innerHeight,
+          products: items,
+          totalPrice: totalPrice,
+          totalItems: totalItems,
+          shippingDetails: {
+            name: form.name,
+            email: form.email,
+            address: form.address,
+            city: form.city,
+            zip: form.zip
+          }
+        })
+      }
+
+      // Simulate payment processing
+      await new Promise(resolve => setTimeout(resolve, 1500))
+
+      // Navigate to success/confirmation page
+      // Option 1: Navigate to an order confirmation page
       navigate('/payment')
+
+
+    } catch (error) {
+      console.error('Payment processing error:', error)
+      setProcessing(false)
+      // Show error message to user
+      alert('There was an error processing your order. Please try again.')
+    } finally {
+      setProcessing(false)
+    }
   }
 
   return (
@@ -73,6 +115,7 @@ export default function Payment() {
                 value={form.name}
                 onChange={handleChange}
                 placeholder="John Doe"
+                disabled={processing}
               />
               {errors.name && <span className="error">{errors.name}</span>}
             </div>
@@ -84,6 +127,7 @@ export default function Payment() {
                 value={form.email}
                 onChange={handleChange}
                 placeholder="john@example.com"
+                disabled={processing}
               />
               {errors.email && <span className="error">{errors.email}</span>}
             </div>
@@ -95,6 +139,7 @@ export default function Payment() {
               value={form.address}
               onChange={handleChange}
               placeholder="123 Main St"
+              disabled={processing}
             />
             {errors.address && <span className="error">{errors.address}</span>}
           </div>
@@ -106,6 +151,7 @@ export default function Payment() {
                 value={form.city}
                 onChange={handleChange}
                 placeholder="New York"
+                disabled={processing}
               />
               {errors.city && <span className="error">{errors.city}</span>}
             </div>
@@ -116,6 +162,7 @@ export default function Payment() {
                 value={form.zip}
                 onChange={handleChange}
                 placeholder="10001"
+                disabled={processing}
               />
               {errors.zip && <span className="error">{errors.zip}</span>}
             </div>
@@ -126,7 +173,7 @@ export default function Payment() {
             className="btn btn-primary pay-btn"
             disabled={processing}
           >
-            Proceed
+            {processing ? 'Processing...' : 'Place Order'}
           </button>
         </form>
 

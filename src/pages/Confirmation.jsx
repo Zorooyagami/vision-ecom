@@ -7,11 +7,14 @@ export default function Confirmation() {
   if (!state?.orderId) {
     return <Navigate to="/" replace />
   }
-window.vision?.track('order_confirmation', {
-        orderId: state.orderId,
-        total: state.total,
-        email: state.email
-      })  
+// window.vision?.track('order_confirmation', {
+//    title: document.title,
+//           screenWidth: window.innerWidth,
+//           screenHeight: window.innerHeight,
+//         orderId: state.orderId,
+//         total: state.total,
+//         email: state.email
+//       })  
   return (
     <div className="confirmation-page container">
       <div className="confirmation-card card">

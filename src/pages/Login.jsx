@@ -45,15 +45,23 @@ export default function Login() {
 
       if (mode === 'login') {
         result = await login(form.email, form.password)
+        console.log("result", result)
       } else {
         result = await register(
           form.name,
           form.email,
           form.password
         )
+        console.log("result", result)
       }
 
       if (result.success) {
+        window.vision?.track(mode === 'login' ? 'login' : 'sign_up', {
+          title: document.title,
+          screenWidth: window.innerWidth,
+          screenHeight: window.innerHeight,
+          userId : result.user.userId
+      })  
         navigate(from, { replace: true })
       } else {
         setError(result.error || 'Something went wrong')

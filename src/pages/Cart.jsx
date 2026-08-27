@@ -7,9 +7,12 @@ export default function Cart() {
 
   const triggerCheckoutStart = () => {
     window.vision?.track('checkout_start', {
+       title: document.title,
+          screenWidth: window.innerWidth,
+          screenHeight: window.innerHeight,
       products: items,
       totalPrice: totalPrice,
-      totalItems: totalItems
+      totalItems: totalItems,
     })
   }
   
@@ -29,7 +32,12 @@ export default function Cart() {
     )
   }
   window.vision?.track('view_cart', {
-      products: items
+     title: document.title,
+          screenWidth: window.innerWidth,
+          screenHeight: window.innerHeight,
+      products: items,
+      otalPrice: totalPrice,
+      totalItems: totalItems,
     })
   return (
     <div className="cart-page container">
@@ -39,7 +47,7 @@ export default function Cart() {
         <div className="cart-items">
           {items.map(item => (
             <div key={item.id} className="cart-item card">
-              <img src={item.image} alt={item.name} className="cart-item-img" />
+              <img src="https://images.pexels.com/photos/325153/pexels-photo-325153.jpeg" alt={item.name} className="cart-item-img" />
               <div className="cart-item-info">
                 <Link to={`/products/${item.id}`}>
                   <h3>{item.name}</h3>
@@ -48,7 +56,7 @@ export default function Cart() {
               </div>
               <div className="cart-item-qty">
                 <button
-                  onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                  onClick={() => updateQuantity(item.id, item.quantity - 1, item)}
                   aria-label="Decrease quantity"
                 >
                   −
@@ -66,7 +74,7 @@ export default function Cart() {
               </div>
               <button
                 className="remove-btn"
-                onClick={() => removeFromCart(item.id)}
+                onClick={() => removeFromCart(item.id, item)}
                 aria-label="Remove item"
               >
                 ✕

@@ -13,14 +13,34 @@ export default function ProductCard({ productPosition, product }) {
       screenWidth: window.innerWidth,
       screenHeight: window.innerHeight,
       productId: product.id, 
-      position: productPosition });
+      position: productPosition,
+      name: product.name,
+      category: product.name,
+      subCategory :product.name,
+      brand: product.brand,
+      color: product.color,
+      condition : product.condition,
+      rating : product.rating,
+      tags : product.tags,
+      price : product.price
+ });
   }
 
   const addToCartHandler = () => {
-    window.vision?.track('select_item', {
-      itemId: product.id,
-      itemName: product.name,
-      itemPosition: productPosition
+    window.vision?.track('add_to_cart', {
+       title: document.title,
+      screenWidth: window.innerWidth,
+      screenHeight: window.innerHeight,
+      productId: product.id, 
+      position: productPosition,
+      name: product.name,
+      category: product.name,
+      subCategory :product.name,
+      brand: product.brand,
+      color: product.color,
+      condition : product.condition,
+      rating : product.rating,
+      tags : product.tags,
     })
      addToCart(product)
   }
@@ -28,7 +48,7 @@ export default function ProductCard({ productPosition, product }) {
     <div className="product-card card">
       <Link to={`/products-detail/${product.id}`} className="product-image-wrap"
       onClick={productClickHandler}>
-        <img src={product.image} alt={product.name} loading="lazy" />
+        <img src="https://images.pexels.com/photos/325153/pexels-photo-325153.jpeg" alt={product.name} loading="lazy" />
       </Link>
       <div className="product-info">
         <span className="product-category">{product.category}</span>

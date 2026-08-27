@@ -22,6 +22,12 @@ export default function Navbar() {
         </Link>
 
         <nav className="nav-links">
+          <NavLink to="/recorded-users" end className={({ isActive }) => isActive ? 'active' : ''}>
+            RRWEB
+          </NavLink>
+          <NavLink to="/heatmap-pages" end className={({ isActive }) => isActive ? 'active' : ''}>
+            HeatMap
+          </NavLink>
           <NavLink to="/" end className={({ isActive }) => isActive ? 'active' : ''}>
             Home
           </NavLink>
