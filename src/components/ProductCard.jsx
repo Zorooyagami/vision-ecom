@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import './ProductCard.css'
 
-export default function ProductCard({ productPosition, product }) {
+export default function ProductCard({ productPosition = null, product }) {
   const { addToCart } = useCart()
 
   const productClickHandler = () => {
@@ -54,7 +54,7 @@ export default function ProductCard({ productPosition, product }) {
         <span className="product-category">{product.category}</span>
         <Link to={`/products-detail/${product.id}`} 
         onClick={productClickHandler}>
-          <h3 className="product-name">{product.name} --{productPosition}</h3>
+          <h3 className="product-name">{product.name}</h3>
         </Link>
         <div className="product-meta">
           <span className="product-price">${product.price.toFixed(2)}</span>

@@ -12,7 +12,7 @@ export default function Products() {
   const [sort, setSort] = useState('default')
   const [searchQuery, setSearchQuery] = useState('')
   const [inStock, setInStock] = useState(false)
-  const [showFilters, setShowFilters] = useState(true)
+  const [showFilters, setShowFilters] = useState(() => typeof window === 'undefined' ? true : window.innerWidth > 768)
   
   // Pagination states - Default to 25 items per page
   const [currentPage, setCurrentPage] = useState(1)
@@ -627,6 +627,13 @@ const isAdding = !currentValues.includes(value);
               <p className="item-count">{filtered.length} items</p>
             </div>
             <div className="header-right">
+              <button
+                type="button"
+                className="mobile-filter-trigger"
+                onClick={() => setShowFilters(prev => !prev)}
+              >
+                Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
+              </button>
               {/* Items per page selector */}
               {/* <select 
                 value={itemsPerPage} 
@@ -713,6 +720,16 @@ const isAdding = !currentValues.includes(value);
           )}
 
           {/* Products Grid */}
+          {filtered.length === 0 ? (
+            <div className="no-products">
+              <div className="no-products-icon">⌕</div>
+              <h2>No products found</h2>
+              <p>Try adjusting your search or filters.</p>
+              <button type="button" className="btn btn-secondary" onClick={clearAllFilters}>
+                Clear filters
+              </button>
+            </div>
+          ) : (
           <div className="products-grid">
             {currentItems.map((product, index) => (
               <ProductCard
@@ -725,6 +742,7 @@ const isAdding = !currentValues.includes(value);
               />
             ))}
           </div>
+          )}
 
           {/* Pagination */}
           {filtered.length > 0 && (

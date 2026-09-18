@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
@@ -7,9 +8,11 @@ export default function Navbar() {
   const { totalItems } = useCart()
   const { user, isAuthenticated, logout } = useAuth()
   const navigate = useNavigate()
+  const [menuOpen, setMenuOpen] = useState(false)
 
   const handleLogout = () => {
     logout()
+    setMenuOpen(false)
     navigate('/')
   }
 
@@ -21,7 +24,19 @@ export default function Navbar() {
           Vision E-Com
         </Link>
 
-        <nav className="nav-links">
+        <button
+          type="button"
+          className="nav-toggle"
+          aria-label="Toggle navigation"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen(open => !open)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+
+        <nav className={`nav-links ${menuOpen ? 'open' : ''}`} onClick={() => setMenuOpen(false)}>
           {/* <NavLink to="/recorded-users" end className={({ isActive }) => isActive ? 'active' : ''}>
             RRWEB
           </NavLink>

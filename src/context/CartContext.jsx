@@ -33,7 +33,6 @@ function cartReducer(state, action) {
       }
     case 'UPDATE_QUANTITY': {
       const { id, quantity, item } = action.payload
-      console.log("item", item)
       if (quantity <= 0) {
          window.vision?.track('remove_from_cart', {
           title: document.title,

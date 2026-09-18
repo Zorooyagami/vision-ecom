@@ -25,7 +25,7 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="container">
-        <p>© 2026 ShopEasy — Demo ecommerce store built with React</p>
+        <p>© 2026 Vision E-Com — Demo ecommerce store built with React</p>
       </div>
     </footer>
   )
@@ -33,8 +33,12 @@ function Footer() {
 
 /** Protect routes that require login */
 function ProtectedRoute({ children }) {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, loading } = useAuth()
   const location = useLocation()
+
+  if (loading) {
+    return <div className="route-loading">Loading…</div>
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />
@@ -83,6 +87,7 @@ export default function App() {
             }
           />
           <Route path="/confirmation" element={<Confirmation />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
       <Footer />

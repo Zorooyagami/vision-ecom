@@ -45,7 +45,6 @@
   // Check URL periodically as a fallback for SPA navigation.
   const ROUTE_CHECK_INTERVAL_MS = 250;
 
-
   // =====================================================================
   // ID GENERATION
   // =====================================================================
@@ -211,7 +210,75 @@
     return null;
   }
 
+  // =====================================================================
+  // device info tracking replaceState
+  // =====================================================================
 
+  const userAgent = navigator.userAgent;
+  const platform = navigator.platform;
+  
+  // Get OS
+  const getOS = () => {
+    const osMap = {
+      'Windows': /Windows/i,
+      'Mac OS': /Macintosh|Mac OS X/i,
+      'iOS': /iPhone|iPad|iPod/i,
+      'Android': /Android/i,
+      'Linux': /Linux/i,
+      'Chrome OS': /CrOS/i
+    };
+    
+    for (const [os, pattern] of Object.entries(osMap)) {
+      if (pattern.test(userAgent)) return os;
+    }
+    return 'Unknown';
+  };
+
+  // Get Browser
+  const getBrowser = () => {
+    const browserMap = {
+      'Chrome': /Chrome/i,
+      'Firefox': /Firefox/i,
+      'Safari': /Safari/i,
+      'Edge': /Edg/i,
+      'Opera': /OPR/i,
+      'Brave': /Brave/i,
+      'IE': /MSIE|Trident/i
+    };
+    
+    for (const [browser, pattern] of Object.entries(browserMap)) {
+      if (pattern.test(userAgent)) return browser;
+    }
+    return 'Unknown';
+  };
+
+  // Get Device Type
+  const getDeviceType = () => {
+    const ua = userAgent.toLowerCase();
+    if (/(tablet|ipad|playbook|kindle|silk)/i.test(ua)) return 'Tablet';
+    if (/(mobile|iphone|ipod|android|blackberry|windows phone)/i.test(ua)) return 'Mobile';
+    return 'Desktop';
+  };
+
+
+
+const deviceInfo = async  () =>  {
+  let info = {
+    userAgent,
+    platform,
+    os: getOS(),
+    browser: getBrowser(),
+    deviceType: getDeviceType(),
+    language: navigator.language || navigator.userLanguage,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    referrer: document.referrer || null,
+    url: window.location.href,
+    pathname: window.location.pathname,
+    search: window.location.search,
+    timestamp: new Date().toISOString()
+  };
+  return info
+};
   // =====================================================================
   // EVENT QUEUE
   // =====================================================================
@@ -223,10 +290,11 @@
   // CREATE EVENT
   // =====================================================================
 
-  function createEvent(
+  async function createEvent(
     eventName,
     properties
   ) {
+    let info = await deviceInfo()
     return {
       event: eventName,
 
@@ -250,6 +318,8 @@
 
       properties:
         properties || {},
+
+      deviceInfo : info
     };
   }
 
@@ -258,7 +328,7 @@
   // TRACK
   // =====================================================================
 
-  function track(
+  async function track(
     eventName,
     properties
   ) {
@@ -271,7 +341,7 @@
     }
 
     const eventObject =
-      createEvent(
+      await createEvent(
         eventName,
         properties
       );
@@ -584,7 +654,6 @@
       );
     };
 
-
   // =====================================================================
   // PATCH replaceState
   // =====================================================================
@@ -637,33 +706,180 @@
     ROUTE_CHECK_INTERVAL_MS
   );
 
+// =====================================================================
+// HEATMAP TRACKING
+// =====================================================================
 
+const HEATMAP_CONFIG = {
+  enabled: true,
+  mouseMoveThrottle: 100,
+  minMoveDistance: 8,
+};
+
+// recorder.js — wherever getNormalizedCoordinates lives
+function getHeatmapRoot() {
+  return (
+    document.querySelector('[data-heatmap-root]') ||
+    document.querySelector('main') ||
+    document.body
+  );
+}
+
+function getNormalizedCoordinates(event) {
+  const doc = document.documentElement
+  const body = document.body
+
+  const documentWidth = Math.max(
+    doc.scrollWidth,
+    doc.clientWidth,
+    body?.scrollWidth || 0,
+    body?.clientWidth || 0
+  )
+
+  const documentHeight = Math.max(
+    doc.scrollHeight,
+    doc.clientHeight,
+    body?.scrollHeight || 0,
+    body?.clientHeight || 0
+  )
+
+  // pageX/pageY are already relative to the complete document,
+  // including scroll position.
+  const pageX =
+    event.pageX ??
+    event.clientX + window.scrollX
+
+  const pageY =
+    event.pageY ??
+    event.clientY + window.scrollY
+
+  if (
+    pageX < 0 ||
+    pageY < 0 ||
+    pageX > documentWidth ||
+    pageY > documentHeight
+  ) {
+    return null
+  }
+
+  return {
+    x: Number(
+      (pageX / documentWidth).toFixed(6)
+    ),
+
+    y: Number(
+      (pageY / documentHeight).toFixed(6)
+    ),
+
+    // Keep original geometry for debugging
+    xPx: Math.round(pageX),
+    yPx: Math.round(pageY),
+
+    documentWidth,
+    documentHeight,
+
+    viewportWidth: window.innerWidth,
+    viewportHeight: window.innerHeight,
+
+    scrollX: window.scrollX,
+    scrollY: window.scrollY,
+  }
+}
+
+
+// ---------------------------------------------------------------------
+// CLICK TRACKING
+// ---------------------------------------------------------------------
+
+function setupHeatmapClickTracking() {
+  document.addEventListener('click', (event) => {
+    const coords =
+      getNormalizedCoordinates(event)
+
+    if (!coords) return
+
+    track('heatmap_click', {
+      ...coords,
+      page: location.pathname,
+    })
+  })
+}
+
+// ---------------------------------------------------------------------
+// MOUSE MOVEMENT TRACKING
+// ---------------------------------------------------------------------
+
+function setupHeatmapMoveTracking() {
+  let lastX = 0
+  let lastY = 0
+  let lastTrackedAt = 0
+
+  document.addEventListener(
+    'mousemove',
+    (event) => {
+      const now = Date.now()
+
+      if (
+        now - lastTrackedAt <
+        HEATMAP_CONFIG.mouseMoveThrottle
+      ) {
+        return
+      }
+
+      const distance = Math.sqrt(
+        Math.pow(event.clientX - lastX, 2) +
+        Math.pow(event.clientY - lastY, 2)
+      )
+
+      if (
+        distance <
+        HEATMAP_CONFIG.minMoveDistance
+      ) {
+        return
+      }
+
+      lastX = event.clientX
+      lastY = event.clientY
+      lastTrackedAt = now
+
+      const coords =
+        getNormalizedCoordinates(event)
+
+      if (!coords) return
+
+      track('heatmap_move', {
+        ...coords,
+        page: location.pathname,
+      })
+    }
+  )
+}
   // =====================================================================
   // INITIAL PAGE VIEW
   // =====================================================================
 
-  function init() {
-    console.log(
-      "[Vision Tracker] initialized"
-    );
+ function init() {
+  console.log(
+    "[Vision Tracker] initialized"
+  );
 
-    console.log(
-      "[Vision Tracker] sessionId:",
-      getSessionId()
-    );
+  console.log(
+    "[Vision Tracker] sessionId:",
+    getSessionId()
+  );
 
-    console.log(
-      "[Vision Tracker] userId:",
-      getUserId()
-    );
+  console.log(
+    "[Vision Tracker] userId:",
+    getUserId()
+  );
 
-    /*
-     * Initial page view.
-     */
+  trackPageView();
 
-    trackPageView();
+  if (HEATMAP_CONFIG.enabled) {
+    setupHeatmapClickTracking();
+    setupHeatmapMoveTracking();
   }
-
+}
 
   // =====================================================================
   // PUBLIC API
@@ -726,137 +942,7 @@
   // =====================================================================
 
   init();
-
 })();
 
 
-// ========================================================================
-// EXAMPLE EVENTS
-// ========================================================================
-//
-// Product listing
-//
-// window.vision?.track(
-//   "view_item_list",
-//   {
-//     listId: "cat_shoes",
-//     listName: "Footwear",
-//     itemIds: ["p1", "p2", "p3"]
-//   }
-// );
-//
-//
-// Product selection
-//
-// window.vision?.track(
-//   "select_item",
-//   {
-//     productId: "p1",
-//     listId: "cat_shoes",
-//     position: 0
-//   }
-// );
-//
-//
-// Product detail
-//
-// window.vision?.track(
-//   "product_view",
-//   {
-//     productId: "p1",
-//     name: "Running Shoes",
-//     price: 1999,
-//     category: "Footwear"
-//   }
-// );
-//
-//
-// Add to cart
-//
-// window.vision?.track(
-//   "add_to_cart",
-//   {
-//     productId: "p1",
-//     price: 1999,
-//     quantity: 1,
-//     source: "product_page"
-//   }
-// );
-//
-//
-// Remove from cart
-//
-// window.vision?.track(
-//   "remove_from_cart",
-//   {
-//     productId: "p1",
-//     price: 1999,
-//     quantity: 1
-//   }
-// );
-//
-//
-// View cart
-//
-// window.vision?.track(
-//   "view_cart",
-//   {
-//     itemCount: 2,
-//     cartValue: 3998
-//   }
-// );
-//
-//
-// Checkout
-//
-// window.vision?.track(
-//   "checkout_start",
-//   {
-//     itemCount: 2,
-//     cartValue: 3998
-//   }
-// );
-//
-//
-// Payment
-//
-// window.vision?.track(
-//   "add_payment_info",
-//   {
-//     paymentMethod: "card"
-//   }
-// );
-//
-//
-// Purchase
-//
-// window.vision?.track(
-//   "purchase",
-//   {
-//     orderId: "ord_abc123",
-//     orderValue: 3998,
-//     items: [
-//       {
-//         productId: "p1",
-//         quantity: 1,
-//         price: 1999
-//       },
-//       {
-//         productId: "p2",
-//         quantity: 1,
-//         price: 1999
-//       }
-//     ],
-//     paymentMethod: "card"
-//   }
-// );
-//
-//
-// Order confirmation
-//
-// window.vision?.track(
-//   "order_confirmation",
-//   {
-//     orderId: "ord_abc123"
-//   }
-// );
+

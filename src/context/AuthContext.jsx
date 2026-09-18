@@ -2,7 +2,7 @@ import { createContext, useContext, useReducer, useEffect } from 'react'
 
 const AuthContext = createContext()
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000'
 
 const initialState = {
   user: null,

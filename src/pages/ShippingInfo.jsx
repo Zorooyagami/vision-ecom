@@ -4,16 +4,16 @@ import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 import './Payment.css'
 
-export default function Payment() {
+export default function ShippingInfo() {
   const { items, totalPrice, clearCart } = useCart()
   const { user } = useAuth()
   const navigate = useNavigate()
   const [form, setForm] = useState({
     name: user?.name || '',
     email: user?.email || '',
-    address: 'test test',
-    city: 'Mumbai',
-    zip: '400001',
+    address: '',
+    city: '',
+    zip: '',
   })
   const [errors, setErrors] = useState({})
   const [processing, setProcessing] = useState(false)
@@ -173,7 +173,7 @@ export default function Payment() {
             className="btn btn-primary pay-btn"
             disabled={processing}
           >
-            {processing ? 'Processing...' : 'Place Order'}
+            {processing ? 'Saving details…' : 'Continue to Payment'}
           </button>
         </form>
 

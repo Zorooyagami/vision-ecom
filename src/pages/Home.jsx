@@ -29,8 +29,8 @@ export default function Home() {
           <Link to="/products" className="view-all">View all →</Link>
         </div>
         <div className="products-grid">
-          {featured.map(p => (
-            <ProductCard key={p.id} product={p} />
+          {featured.map((p, index) => (
+            <ProductCard key={p.id} product={p} productPosition={index + 1} />
           ))}
         </div>
       </section>

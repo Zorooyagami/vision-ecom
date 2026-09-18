@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import './Login.css'
 
@@ -19,10 +19,9 @@ export default function Login() {
 
   const from = location.state?.from?.pathname || '/'
 
-  // Already logged in → redirect
+  // Already logged in → redirect without triggering navigation during render
   if (isAuthenticated) {
-    navigate(from, { replace: true })
-    return null
+    return <Navigate to={from} replace />
   }
 
   const handleChange = (e) => {
@@ -45,14 +44,12 @@ export default function Login() {
 
       if (mode === 'login') {
         result = await login(form.email, form.password)
-        console.log("result", result)
       } else {
         result = await register(
           form.name,
           form.email,
           form.password
         )
-        console.log("result", result)
       }
 
       if (result.success) {
@@ -101,13 +98,13 @@ export default function Login() {
         <p className="subtitle">
           {mode === 'login'
             ? 'Sign in to continue shopping'
-            : 'Join ShopEasy to track orders and more'}
+            : 'Join Vision E-Com to track orders and more'}
         </p>
 
         <div className="demo-hint">
           {mode === 'login'
-            ? 'Sign in using your ShopEasy account'
-            : 'Create a new ShopEasy account'}
+            ? 'Sign in using your Vision E-Com account'
+            : 'Create a new Vision E-Com account'}
         </div>
 
         <form onSubmit={handleSubmit}>

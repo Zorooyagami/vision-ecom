@@ -49,7 +49,7 @@ export default function Cart() {
             <div key={item.id} className="cart-item card">
               <img src="https://images.pexels.com/photos/325153/pexels-photo-325153.jpeg" alt={item.name} className="cart-item-img" />
               <div className="cart-item-info">
-                <Link to={`/products/${item.id}`}>
+                <Link to={`/products-detail/${item.id}`}>
                   <h3>{item.name}</h3>
                 </Link>
                 <p className="cart-item-price">${item.price.toFixed(2)}</p>
@@ -100,7 +100,7 @@ export default function Cart() {
             </span>
           </div>
           <Link to="/shipping-info" onClick={triggerCheckoutStart} className="btn btn-primary checkout-btn">
-            Proceed to Payment
+            Continue to Checkout
           </Link>
           <Link to="/products" className="continue-shopping">
             ← Continue Shopping

@@ -111,3 +111,37 @@
 .back-home:hover {
   color: #2563eb;
 }
+
+/* --- UI refresh --- */
+.login-page {
+  min-height: calc(100vh - 180px);
+  align-items: center;
+  padding: 2rem 0 3rem;
+}
+
+.login-card {
+  max-width: 440px;
+  border-radius: 18px;
+  padding: 2.4rem;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, .09);
+}
+
+.login-card h1 {
+  letter-spacing: -0.03em;
+}
+
+.login-card input {
+  min-height: 46px;
+}
+
+@media (max-width: 520px) {
+  .login-page {
+    align-items: flex-start;
+    padding: 1.25rem 0 2rem;
+  }
+
+  .login-card {
+    padding: 1.5rem 1.1rem;
+    border-radius: 14px;
+  }
+}

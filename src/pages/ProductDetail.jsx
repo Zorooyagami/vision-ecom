@@ -130,12 +130,12 @@ export default function ProductDetail() {
     Secure payments supported
   </p>
 
-  <div className="payment-methods">
-    <span className="payment-card">VISA</span>
-    <span className="payment-card mastercard">●●</span>
-    <span className="payment-card">UPI</span>
-    <span className="payment-card">PayPal</span>
-    <span className="payment-card">AMEX</span>
+  <div className="pdp-payment-methods">
+    <span className="pdp-payment-card">VISA</span>
+    <span className="pdp-payment-card mastercard">●●</span>
+    <span className="pdp-payment-card">UPI</span>
+    <span className="pdp-payment-card">PayPal</span>
+    <span className="pdp-payment-card">AMEX</span>
   </div>
 </div>
 

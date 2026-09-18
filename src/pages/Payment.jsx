@@ -71,13 +71,16 @@ export default function Payment() {
     // Simulate payment processing
     setTimeout(() => {
       
+      const orderId = 'ORD-' + Date.now().toString().slice(-8)
+      const customerEmail = user?.email || ''
+
       window.vision?.track('purchase', {
         title: document.title,
         screenWidth: window.innerWidth,
         screenHeight: window.innerHeight,
-        orderId: 'ORD-' + Date.now().toString().slice(-8),
+        orderId,
         total: total.toFixed(2),
-        email: form.email,
+        email: customerEmail,
         paymentMethod: selectedPayment, // Added payment method
         products: items.map(item => ({
           productId: item.id,
@@ -90,9 +93,9 @@ export default function Payment() {
       clearCart()
       navigate('/confirmation', {
         state: {
-          orderId: 'ORD-' + Date.now().toString().slice(-8),
+          orderId,
           total: total.toFixed(2),
-          email: form.email,
+          email: customerEmail,
           paymentMethod: selectedPayment, // Added payment method
         },
       })

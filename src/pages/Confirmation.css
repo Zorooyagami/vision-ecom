@@ -70,3 +70,36 @@
 .actions .btn {
   width: 100%;
 }
+
+/* --- UI refresh --- */
+.confirmation-page {
+  min-height: calc(100vh - 180px);
+  align-items: center;
+}
+
+.confirmation-card {
+  border-radius: 18px;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, .09);
+}
+
+@media (max-width: 520px) {
+  .confirmation-page {
+    padding: 1.25rem 0 2rem;
+    align-items: flex-start;
+  }
+
+  .confirmation-card {
+    padding: 1.5rem 1rem;
+    border-radius: 14px;
+  }
+
+  .detail-row {
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .detail-row strong {
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+}

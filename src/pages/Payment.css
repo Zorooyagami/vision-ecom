@@ -308,3 +308,71 @@
     font-size: 0.8rem;
   }
 }
+/* --- UI refresh shared by shipping/payment --- */
+.payment-page h1 {
+  letter-spacing: -0.03em;
+}
+
+.payment-form,
+.order-summary {
+  border-radius: 16px;
+}
+
+.form-group input {
+  min-height: 46px;
+  background: #fff;
+}
+
+.form-group input:disabled {
+  background: #f8fafc;
+  color: #94a3b8;
+}
+
+.payment-option {
+  min-height: 58px;
+}
+
+.payment-icon img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.order-summary .summary-row.total {
+  margin-bottom: 0;
+}
+
+@media (max-width: 900px) {
+  .payment-page {
+    padding-top: 1.25rem;
+  }
+
+  .payment-layout {
+    gap: 1rem;
+  }
+
+  .order-summary {
+    order: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .payment-page h1 {
+    font-size: 1.45rem;
+    margin-bottom: 1rem;
+  }
+
+  .payment-form,
+  .order-summary {
+    padding: 1.1rem;
+    border-radius: 13px;
+  }
+
+  .payment-option {
+    padding: .7rem;
+  }
+
+  .payment-method-message {
+    font-size: .9rem;
+  }
+}
