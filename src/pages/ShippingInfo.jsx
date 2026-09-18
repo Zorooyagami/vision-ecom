@@ -11,9 +11,9 @@ export default function Payment() {
   const [form, setForm] = useState({
     name: user?.name || '',
     email: user?.email || '',
-    address: '',
-    city: '',
-    zip: '',
+    address: 'test test',
+    city: 'Mumbai',
+    zip: '400001',
   })
   const [errors, setErrors] = useState({})
   const [processing, setProcessing] = useState(false)
@@ -108,7 +108,7 @@ export default function Payment() {
         <form className="payment-form card" onSubmit={handleSubmit}>
           <h2>Shipping Details</h2>
           <div className="form-row">
-            <div className="form-group">
+            <div className="form-group rr-mask">
               <label>Full Name</label>
               <input
                 name="name"
@@ -119,7 +119,7 @@ export default function Payment() {
               />
               {errors.name && <span className="error">{errors.name}</span>}
             </div>
-            <div className="form-group">
+            <div className="form-group rr-mask">
               <label>Email</label>
               <input
                 name="email"
@@ -132,7 +132,7 @@ export default function Payment() {
               {errors.email && <span className="error">{errors.email}</span>}
             </div>
           </div>
-          <div className="form-group">
+          <div className="form-group rr-mask">
             <label>Address</label>
             <input
               name="address"
@@ -143,8 +143,8 @@ export default function Payment() {
             />
             {errors.address && <span className="error">{errors.address}</span>}
           </div>
-          <div className="form-row">
-            <div className="form-group">
+          <div className="form-row ">
+            <div className="form-group rr-mask">
               <label>City</label>
               <input
                 name="city"
@@ -155,7 +155,7 @@ export default function Payment() {
               />
               {errors.city && <span className="error">{errors.city}</span>}
             </div>
-            <div className="form-group">
+            <div className="form-group rr-mask">
               <label>ZIP Code</label>
               <input
                 name="zip"

@@ -1,4 +1,4 @@
-// recorder.js
+// lib/recorder.js
 import { record } from 'rrweb'
 import { compressSync, strToU8 } from 'fflate'
 
@@ -54,7 +54,7 @@ class SessionRecorder {
 
   start(pathname) {
     if (this.stopFn) return // already recording
-    if (!this.isAllowed(pathname)) return
+    // if (!this.isAllowed(pathname)) return
 
     const userId = this._getLoggedInUserId()
     if (!userId) return // not logged in — don't record

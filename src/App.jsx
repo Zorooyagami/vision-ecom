@@ -17,6 +17,8 @@ import UserSessions from './pages/UserSessions'
 import RecordedUsers from './pages/RecordedUsers'
 import HeatmapPages from './pages/HeatmapPages'
 import HeatmapView from './pages/HeatmapView'
+import Flow from './pages/Flow'
+import TrafficFlow from './components/TrafficFlow';
 
 
 function Footer() {
@@ -48,6 +50,8 @@ export default function App() {
       <main className="main">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/flow" element={<Flow />} />
+          <Route path="/traffic" element={<TrafficFlow />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products-detail/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />

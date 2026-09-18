@@ -717,72 +717,15 @@ const HEATMAP_CONFIG = {
 };
 
 // recorder.js — wherever getNormalizedCoordinates lives
-function getHeatmapRoot() {
-  return (
-    document.querySelector('[data-heatmap-root]') ||
-    document.querySelector('main') ||
-    document.body
-  );
-}
-
 function getNormalizedCoordinates(event) {
-  const doc = document.documentElement
-  const body = document.body
-
-  const documentWidth = Math.max(
-    doc.scrollWidth,
-    doc.clientWidth,
-    body?.scrollWidth || 0,
-    body?.clientWidth || 0
-  )
-
-  const documentHeight = Math.max(
-    doc.scrollHeight,
-    doc.clientHeight,
-    body?.scrollHeight || 0,
-    body?.clientHeight || 0
-  )
-
-  // pageX/pageY are already relative to the complete document,
-  // including scroll position.
-  const pageX =
-    event.pageX ??
-    event.clientX + window.scrollX
-
-  const pageY =
-    event.pageY ??
-    event.clientY + window.scrollY
-
-  if (
-    pageX < 0 ||
-    pageY < 0 ||
-    pageX > documentWidth ||
-    pageY > documentHeight
-  ) {
-    return null
-  }
+  // pick a stable container that wraps just the PDP/page content — NOT header/footer
+  const container = document.querySelector('main') || document.body
+  const rect = container.getBoundingClientRect()
+  const containerHeight = container.scrollHeight
 
   return {
-    x: Number(
-      (pageX / documentWidth).toFixed(6)
-    ),
-
-    y: Number(
-      (pageY / documentHeight).toFixed(6)
-    ),
-
-    // Keep original geometry for debugging
-    xPx: Math.round(pageX),
-    yPx: Math.round(pageY),
-
-    documentWidth,
-    documentHeight,
-
-    viewportWidth: window.innerWidth,
-    viewportHeight: window.innerHeight,
-
-    scrollX: window.scrollX,
-    scrollY: window.scrollY,
+    x: Number(((event.clientX - rect.left) / rect.width).toFixed(4)),
+    y: Number((((event.clientY - rect.top) + window.scrollY) / containerHeight).toFixed(4)),
   }
 }
 
@@ -792,67 +735,79 @@ function getNormalizedCoordinates(event) {
 // ---------------------------------------------------------------------
 
 function setupHeatmapClickTracking() {
-  document.addEventListener('click', (event) => {
-    const coords =
-      getNormalizedCoordinates(event)
+  document.addEventListener("click", (event) => {
+    const { x, y } =
+      getNormalizedCoordinates(event);
 
-    if (!coords) return
+    track("heatmap_click", {
+      x,
+      y,
+       page: location.pathname,   //
+      viewportWidth:
+        window.innerWidth,
 
-    track('heatmap_click', {
-      ...coords,
-      page: location.pathname,
-    })
-  })
+      viewportHeight:
+        window.innerHeight,
+
+      pageHeight:
+        document.documentElement.scrollHeight,
+    });
+  });
 }
+
 
 // ---------------------------------------------------------------------
 // MOUSE MOVEMENT TRACKING
 // ---------------------------------------------------------------------
 
 function setupHeatmapMoveTracking() {
-  let lastX = 0
-  let lastY = 0
-  let lastTrackedAt = 0
+  let lastX = 0;
+  let lastY = 0;
+  let lastTrackedAt = 0;
 
-  document.addEventListener(
-    'mousemove',
-    (event) => {
-      const now = Date.now()
+  document.addEventListener("mousemove", (event) => {
+    const now = Date.now();
 
-      if (
-        now - lastTrackedAt <
-        HEATMAP_CONFIG.mouseMoveThrottle
-      ) {
-        return
-      }
-
-      const distance = Math.sqrt(
-        Math.pow(event.clientX - lastX, 2) +
-        Math.pow(event.clientY - lastY, 2)
-      )
-
-      if (
-        distance <
-        HEATMAP_CONFIG.minMoveDistance
-      ) {
-        return
-      }
-
-      lastX = event.clientX
-      lastY = event.clientY
-      lastTrackedAt = now
-
-      const coords =
-        getNormalizedCoordinates(event)
-
-      if (!coords) return
-
-      track('heatmap_move', {
-        ...coords,
-        page: location.pathname,
-      })
+    if (
+      now - lastTrackedAt <
+      HEATMAP_CONFIG.mouseMoveThrottle
+    ) {
+      return;
     }
-  )
+
+    const distance = Math.sqrt(
+      Math.pow(event.clientX - lastX, 2) +
+      Math.pow(event.clientY - lastY, 2)
+    );
+
+    if (
+      distance <
+      HEATMAP_CONFIG.minMoveDistance
+    ) {
+      return;
+    }
+
+    lastX = event.clientX;
+    lastY = event.clientY;
+    lastTrackedAt = now;
+
+    const { x, y } =
+      getNormalizedCoordinates(event);
+
+    track("heatmap_move", {
+      x,
+      y,
+      page: location.pathname,
+      viewportWidth:
+        window.innerWidth,
+
+      viewportHeight:
+        window.innerHeight,
+
+      pageHeight:
+        document.documentElement.scrollHeight,
+    });
+  });
 }
   // =====================================================================
   // INITIAL PAGE VIEW

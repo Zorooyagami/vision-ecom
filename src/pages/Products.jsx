@@ -628,7 +628,7 @@ const isAdding = !currentValues.includes(value);
             </div>
             <div className="header-right">
               {/* Items per page selector */}
-              <select 
+              {/* <select 
                 value={itemsPerPage} 
                 onChange={handleItemsPerPageChange}
                 className="items-per-page-select"
@@ -637,7 +637,7 @@ const isAdding = !currentValues.includes(value);
                 <option value={25}>25 per page</option>
                 <option value={50}>50 per page</option>
                 <option value={100}>100 per page</option>
-              </select>
+              </select> */}
 
               {/* Sort */}
               <select 

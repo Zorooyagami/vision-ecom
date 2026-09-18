@@ -26,21 +26,14 @@ function cartReducer(state, action) {
       }
     }
     case 'REMOVE_ITEM':
-      const { id,  item } = action.payload
-       window.vision?.track('remove_from_cart', {
-          title: document.title,
-          screenWidth: window.innerWidth,
-          screenHeight: window.innerHeight,
-          id: id,
-          category: item.category,
-          price: item.price
-        })
+      
       return {
         ...state,
         items: state.items.filter(i => i.id !== action.payload),
       }
     case 'UPDATE_QUANTITY': {
       const { id, quantity, item } = action.payload
+      console.log("item", item)
       if (quantity <= 0) {
          window.vision?.track('remove_from_cart', {
           title: document.title,
@@ -97,11 +90,19 @@ export function CartProvider({ children }) {
   }
 
   const removeFromCart = (id, item) => {
-    dispatch({ type: 'REMOVE_ITEM', payload: {id, item } })
+    window.vision?.track('remove_from_cart', {
+          title: document.title,
+          screenWidth: window.innerWidth,
+          screenHeight: window.innerHeight,
+          id: id,
+          category: item.category,
+          price: item.price
+        })
+    dispatch({ type: 'REMOVE_ITEM', payload: id })
   }
 
-  const updateQuantity = (id, quantity) => {
-    dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } })
+  const updateQuantity = (id, quantity, item) => {
+    dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity, item } })
   }
 
   const clearCart = () => {

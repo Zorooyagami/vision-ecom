@@ -60,7 +60,7 @@ export default function ProductDetail() {
       <Link to="/products" className="back-link">← Back to Products</Link>
 
       <div className="detail-grid">
-        <div className="detail-image  rr-mask">
+        <div className="detail-image  ">
           <img src="https://images.pexels.com/photos/325153/pexels-photo-325153.jpeg" alt={product.name} />
         </div>
 
@@ -71,18 +71,18 @@ export default function ProductDetail() {
             <span className="stars">★ {product.rating}</span>
             <span className="stock">{product.stock} in stock</span>
           </div>
-          <p className="detail-price rr-mask">${product.price.toFixed(2)}</p>
-          <p className="detail-desc  rr-mask">{product.description}</p>
+          <p className="detail-price ">${product.price.toFixed(2)}</p>
+          <p className="detail-desc  ">{product.description}</p>
 
           <div className="detail-actions">
   <button
-    className="btn btn-primary rr-mask"
+    className="btn btn-primary "
     onClick={addToCartHandler}
   >
     Add to Basket
   </button>
 
-  <Link to="/cart" className="btn btn-outline rr-mask">
+  <Link to="/cart" className="btn btn-outline ">
     View Basket
   </Link>
 </div>

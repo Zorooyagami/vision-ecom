@@ -187,7 +187,7 @@ export default function Payment() {
             <>
               <p className="demo-note">This is a demo — no real charges will be made.</p>
               
-              <div className="form-group">
+              <div className="form-group rr-mask">
                 <label>Card Number</label>
                 <input
                   name="card"
@@ -199,7 +199,7 @@ export default function Payment() {
                 {errors.card && <span className="error">{errors.card}</span>}
               </div>
               <div className="form-row">
-                <div className="form-group">
+                <div className="form-group rr-mask">
                   <label>Expiry (MM/YY)</label>
                   <input
                     name="expiry"
@@ -210,7 +210,7 @@ export default function Payment() {
                   />
                   {errors.expiry && <span className="error">{errors.expiry}</span>}
                 </div>
-                <div className="form-group">
+                <div className="form-group rr-mask">
                   <label>CVV</label>
                   <input
                     name="cvv"

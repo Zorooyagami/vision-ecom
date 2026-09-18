@@ -1,0 +1,170 @@
+.journey-card {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.journey-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.journey-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.journey-header p {
+  margin: 5px 0 0;
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.journey-total {
+  text-align: right;
+}
+
+.journey-total span {
+  display: block;
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.journey-total strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 22px;
+  color: #374151;
+}
+
+/* =========================
+   GRAPH
+========================= */
+
+.journey-graph {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 15px;
+}
+
+.journey-graph svg {
+  display: block;
+  width: 100%;
+  min-width: 1000px;
+  height: 500px;
+  overflow: visible;
+}
+
+/* =========================
+   CONNECTIONS
+========================= */
+
+.journey-edge-line {
+  fill: none;
+  stroke: #6366f1;
+  stroke-linecap: round;
+  opacity: 0.45;
+
+  transition:
+    opacity 0.2s ease,
+    stroke-width 0.2s ease;
+}
+
+.journey-edge-shadow {
+  fill: none;
+  stroke: #6366f1;
+  stroke-linecap: round;
+  opacity: 0.08;
+}
+
+.journey-edge:hover .journey-edge-line {
+  opacity: 0.75;
+}
+
+.journey-edge:hover .journey-edge-shadow {
+  opacity: 0.15;
+}
+
+/* =========================
+   NODES
+========================= */
+
+.journey-node rect {
+  fill: #ffffff;
+  stroke: #6366f1;
+  stroke-width: 2;
+}
+
+.node-title {
+  font-size: 14px;
+  font-weight: 600;
+  fill: #374151;
+}
+
+.node-subtitle {
+  font-size: 11px;
+  fill: #9ca3af;
+}
+
+/* =========================
+   JOURNEY LIST
+========================= */
+
+.journey-list {
+  margin-top: 10px;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 12px;
+}
+
+.journey-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.journey-row-info {
+  flex: 1;
+}
+
+.journey-row-label {
+  font-size: 13px;
+  color: #374151;
+}
+
+.journey-progress {
+  height: 4px;
+  background: #f3f4f6;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 7px;
+}
+
+.journey-progress div {
+  height: 100%;
+  background: #6366f1;
+  border-radius: inherit;
+}
+
+.journey-row-stats {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.journey-row-stats strong {
+  font-size: 14px;
+  color: #111827;
+}
+
+.journey-row-stats span {
+  font-size: 12px;
+  color: #9ca3af;
+}
