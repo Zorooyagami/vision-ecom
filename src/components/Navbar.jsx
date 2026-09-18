@@ -18,16 +18,16 @@ export default function Navbar() {
       <div className="container navbar-inner">
         <Link to="/" className="logo">
           <span className="logo-icon">🛍️</span>
-          ShopEasy-2
+          Vision E-Com
         </Link>
 
         <nav className="nav-links">
-          <NavLink to="/recorded-users" end className={({ isActive }) => isActive ? 'active' : ''}>
+          {/* <NavLink to="/recorded-users" end className={({ isActive }) => isActive ? 'active' : ''}>
             RRWEB
           </NavLink>
           <NavLink to="/heatmap-pages" end className={({ isActive }) => isActive ? 'active' : ''}>
             HeatMap
-          </NavLink>
+          </NavLink> */}
           <NavLink to="/" end className={({ isActive }) => isActive ? 'active' : ''}>
             Home
           </NavLink>

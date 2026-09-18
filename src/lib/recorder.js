@@ -3,10 +3,12 @@ import { record } from 'rrweb'
 import { compressSync, strToU8 } from 'fflate'
 
 const ALLOWED_ROUTES = [
-  /^\/$/,                  // homepage
-  /^\/products\/?$/,       // PLP
-  /^\/product\/[^/]+\/?$/, // PDP
-  /^\/cart\/?$/,           // cart
+  /^\/$/,                          // homepage
+  /^\/products\/?$/,               // PLP — confirm this matches your real PLP URL too, see note below
+  /^\/products-detail\/[^/]+\/?$/, // PDP — was /product/..., real site uses /products-detail/...
+  /^\/cart\/?$/,                   // cart
+  /^\/payment\/?$/,                // checkout/payment — was missing entirely
+  /^\/confirmation\/?$/,                // checkout/payment — was missing entirely
 ]
 
 const FLUSH_INTERVAL_MS = 5000
@@ -54,7 +56,7 @@ class SessionRecorder {
 
   start(pathname) {
     if (this.stopFn) return // already recording
-    // if (!this.isAllowed(pathname)) return
+    if (!this.isAllowed(pathname)) return
 
     const userId = this._getLoggedInUserId()
     if (!userId) return // not logged in — don't record
