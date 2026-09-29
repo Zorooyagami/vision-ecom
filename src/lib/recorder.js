@@ -4,16 +4,36 @@ import { compressSync, strToU8 } from 'fflate'
 
 const ALLOWED_ROUTES = [
   /^\/$/,                          // homepage
-  /^\/products\/?$/,               // PLP — confirm this matches your real PLP URL too, see note below
-  /^\/products-detail\/[^/]+\/?$/, // PDP — was /product/..., real site uses /products-detail/...
+  /^\/products\/?$/,               // PLP — confirm this matches your real PLP URL too
+  /^\/products-detail\/[^/]+\/?$/, // PDP
   /^\/cart\/?$/,                   // cart
-  /^\/payment\/?$/,                // checkout/payment — was missing entirely
-  /^\/confirmation\/?$/,                // checkout/payment — was missing entirely
+  /^\/payment\/?$/,                // checkout/payment
+  /^\/confirmation\/?$/,           // order confirmation
 ]
 
 const FLUSH_INTERVAL_MS = 5000
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
-const API_URL = `${API_BASE_URL}/api/record/ingest`;
+const API_URL = `${API_BASE_URL}/api/record/ingest`
+
+// Resolve the project id from the SDK <script data-project-id="..."> tag.
+// NOTE: document.currentScript is only set while a *classic* script is executing
+// synchronously. In an ES module (this file) it is always null, so we capture it
+// once at load time and fall back to querying the tag.
+// Also: `return` is not allowed at module top level, so we disable recording instead.
+function resolveProjectId() {
+  const sdkScript =
+    document.currentScript || document.querySelector('script[data-project-id]')
+
+  const id = sdkScript?.getAttribute('data-project-id')?.trim()
+
+  if (!id) {
+    console.error('[Vision Tracker] Missing data-project-id on the SDK script')
+    return null
+  }
+  return id
+}
+
+const PROJECT_ID = resolveProjectId()
 
 class SessionRecorder {
   constructor() {
@@ -22,6 +42,7 @@ class SessionRecorder {
     this.flushTimer = null
     this.sessionId = null   // no session until we know a user is logged in
     this.userId = null
+    this.projectId = PROJECT_ID
   }
 
   // reads auth_user from localStorage fresh each time — don't cache in constructor,
@@ -31,7 +52,7 @@ class SessionRecorder {
       const raw = localStorage.getItem('auth_user')
       if (!raw) return null
       const parsed = JSON.parse(raw)
-      return parsed?.userId || null   // ⚠️ change `userId` here if your auth_user uses a different key (e.g. `id`, `_id`)
+      return parsed?.userId || null   // ⚠️ change `userId` if your auth_user uses a different key (e.g. `id`, `_id`)
     } catch (err) {
       console.warn('[recorder] failed to parse auth_user:', err.message)
       return null
@@ -39,9 +60,9 @@ class SessionRecorder {
   }
 
   _getOrCreateSessionId(userId) {
-    // key the stored session id by user, so switching accounts in the same
-    // browser tab (logout -> different login) doesn't reuse the wrong session
-    const storageKey = `rr_session_id_${userId}`
+    // key the stored session id by user AND project, so switching accounts
+    // (or projects) in the same tab doesn't reuse the wrong session
+    const storageKey = `rr_session_id_${this.projectId}_${userId}`
     let id = sessionStorage.getItem(storageKey)
     if (!id) {
       id = crypto.randomUUID()
@@ -56,6 +77,7 @@ class SessionRecorder {
 
   start(pathname) {
     if (this.stopFn) return // already recording
+    if (!this.projectId) return // no project id — don't record
     if (!this.isAllowed(pathname)) return
 
     const userId = this._getLoggedInUserId()
@@ -91,10 +113,11 @@ class SessionRecorder {
 
   flush(isUnload = false) {
     if (this.buffer.length === 0) return
-    if (!this.sessionId) return // safety net — never send data with no session/user context
+    if (!this.sessionId || !this.projectId) return // safety net — never send data without session/project context
 
     const events = this.buffer.splice(0, this.buffer.length)
     const json = JSON.stringify({
+      projectId: this.projectId,
       sessionId: this.sessionId,
       userId: this.userId,
       page: location.pathname,
@@ -110,8 +133,7 @@ class SessionRecorder {
     }
   }
 
-  // called on every route change AND should also be called right after login/logout
-  // (e.g. right after a successful login call sets auth_user in localStorage)
+  // called on every route change AND right after login/logout
   onRouteChange(pathname) {
     const userId = this._getLoggedInUserId()
     const allowed = this.isAllowed(pathname) && !!userId

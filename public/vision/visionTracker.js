@@ -45,6 +45,18 @@
   // Check URL periodically as a fallback for SPA navigation.
   const ROUTE_CHECK_INTERVAL_MS = 250;
 
+
+  const sdkScript = document.currentScript;
+  const PROJECT_ID = sdkScript
+    ?.getAttribute("data-project-id")
+    ?.trim();
+
+  if (!PROJECT_ID) {
+    console.error(
+      "[Vision Tracker] Missing data-project-id on the SDK script"
+    );
+    return;
+  }
   // =====================================================================
   // ID GENERATION
   // =====================================================================
@@ -390,11 +402,10 @@ const deviceInfo = async  () =>  {
 
     eventQueue = [];
 
-    const payload =
-      JSON.stringify({
-        events:
-          eventsToSend,
-      });
+    const payload = JSON.stringify({
+                      projectId: PROJECT_ID,
+                      events: eventsToSend,
+                    });
 
 
     // ---------------------------------------------------------------
