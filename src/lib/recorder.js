@@ -111,27 +111,31 @@ class SessionRecorder {
 
   _onUnload = () => this.flush(true)
 
-  flush(isUnload = false) {
-    if (this.buffer.length === 0) return
-    if (!this.sessionId || !this.projectId) return // safety net — never send data without session/project context
+ flush(isUnload = false) {
+  if (this.buffer.length === 0) return
 
-    const events = this.buffer.splice(0, this.buffer.length)
-    const json = JSON.stringify({
-      projectId: this.projectId,
-      sessionId: this.sessionId,
-      userId: this.userId,
-      page: location.pathname,
-      events,
-    })
-    const compressed = compressSync(strToU8(json))
-    const blob = new Blob([compressed], { type: 'application/octet-stream' })
+  const projectId = this.projectId   // or getProjectId() if you moved to the lazy lookup
+  if (!this.sessionId || !projectId) return // never send without session/project context
 
-    if (isUnload && navigator.sendBeacon) {
-      navigator.sendBeacon(API_URL, blob)
-    } else {
-      fetch(API_URL, { method: 'POST', body: blob, keepalive: true })
-    }
+  const url = `${API_URL}?projectId=${encodeURIComponent(projectId)}`
+
+  const events = this.buffer.splice(0, this.buffer.length)
+  const json = JSON.stringify({
+    projectId,                       // keep in the body too, so the server can cross-check it
+    sessionId: this.sessionId,
+    userId: this.userId,
+    page: location.pathname,
+    events,
+  })
+  const compressed = compressSync(strToU8(json))
+  const blob = new Blob([compressed], { type: 'application/octet-stream' })
+
+  if (isUnload && navigator.sendBeacon) {
+    navigator.sendBeacon(url, blob)
+  } else {
+    fetch(url, { method: 'POST', body: blob, keepalive: true })
   }
+}
 
   // called on every route change AND right after login/logout
   onRouteChange(pathname) {
