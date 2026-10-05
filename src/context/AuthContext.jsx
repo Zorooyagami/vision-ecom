@@ -178,12 +178,15 @@ export function AuthProvider({ children }) {
     }
 
     try {
+      const PROJECT_ID = "vis_6bcd1aef732e0d5d"
+
       const response = await fetch(
         `${API_BASE_URL}/api/auth/signup`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'X-Project-Id': PROJECT_ID,
           },
           body: JSON.stringify({
             name: name.trim(),
