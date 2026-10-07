@@ -44,11 +44,23 @@ export default function ProductCard({ productPosition = null, product }) {
     })
      addToCart(product)
   }
+  const DEFAULT_IMAGE = 'https://images.pexels.com/photos/325153/pexels-photo-325153.jpeg';
+
   return (
     <div className="product-card card">
       <Link to={`/products-detail/${product.id}`} className="product-image-wrap"
       onClick={productClickHandler}>
-        <img src="https://images.pexels.com/photos/325153/pexels-photo-325153.jpeg" alt={product.name} loading="lazy" />
+        {/* <img src="https://images.pexels.com/photos/325153/pexels-photo-325153.jpeg" alt={product.name} loading="lazy" /> */}
+    <img
+  src={product.image || DEFAULT_IMAGE}
+  alt={product.name}
+  loading="lazy"
+  referrerPolicy="no-referrer"
+  onError={(e) => {
+    e.currentTarget.onerror = null
+    e.currentTarget.src = DEFAULT_IMAGE
+  }}
+/>
       </Link>
       <div className="product-info">
         <span className="product-category">{product.category}</span>

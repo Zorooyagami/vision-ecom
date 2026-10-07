@@ -8,6 +8,7 @@ export default function ProductDetail() {
   const { id } = useParams()
   const product = products.find(p => p.id === Number(id))
   const { addToCart } = useCart()
+  const DEFAULT_IMAGE = 'https://images.pexels.com/photos/325153/pexels-photo-325153.jpeg';
 
   useEffect(() => {
     if (!product) return
@@ -61,7 +62,17 @@ export default function ProductDetail() {
 
       <div className="detail-grid">
         <div className="detail-image  ">
-          <img src="https://images.pexels.com/photos/325153/pexels-photo-325153.jpeg" alt={product.name} />
+          {/* <img src="https://images.pexels.com/photos/325153/pexels-photo-325153.jpeg" alt={product.name} /> */}
+            <img
+  src={product.image || DEFAULT_IMAGE}
+  alt={product.name}
+  loading="lazy"
+  referrerPolicy="no-referrer"
+  onError={(e) => {
+    e.currentTarget.onerror = null
+    e.currentTarget.src = DEFAULT_IMAGE
+  }}
+/>
         </div>
 
         <div className="detail-info">

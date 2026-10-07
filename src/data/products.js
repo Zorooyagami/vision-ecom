@@ -12,7 +12,7 @@ export const products = [
     "color": "Phantom Black",
     "rating": 4.3,
     "stock": 47,
-    "image": "https://m.media-amazon.com/images/I/51lNZLhQxPL._AC_SX679_.jpg",
+    "image": "https://m.media-amazon.com/images/I/71y1a7Uif6L._AC_UF894,1000_QL80_.jpg",
     "description": "High-performance gaming console with 4K gaming, ultra-fast SSD, and immersive gaming experience. Disc edition for physical game collection.",
     "tags": ["gaming", "console", "playstation", "sony", "ps5", "disc-version", "high-demand", "value", "good-condition"]
   },
@@ -29,7 +29,7 @@ export const products = [
     "color": "Titanium",
     "rating": 4.1,
     "stock": 13,
-    "image": "https://m.media-amazon.com/images/I/81Z5xXvVqkL._AC_SX679_.jpg",
+    "image": "https://m.media-amazon.com/images/I/51cLdWKgqSL.jpg",
     "description": "Reliable Motorola smartphone with 512GB storage, delivering excellent performance and value for daily use.",
     "tags": ["smartphone", "motorola", "android", "512gb", "like-new", "popular", "limited-stock"]
   },
@@ -46,7 +46,7 @@ export const products = [
     "color": "Space Gray",
     "rating": 3.8,
     "stock": 44,
-    "image": "https://m.media-amazon.com/images/I/81k7T7vNSdL._AC_SX679_.jpg",
+    "image": "https://m.media-amazon.com/images/I/71xHX2U+H0L._SL1500_.jpg",
     "description": "Budget-friendly Asus laptop with massive 1TB storage. Perfect for students or those needing basic computing with generous storage capacity.",
     "tags": ["laptop", "asus", "1tb", "heavy-discount", "budget", "popular"]
   },
@@ -63,7 +63,7 @@ export const products = [
     "color": "Forest Green",
     "rating": 4.7,
     "stock": 48,
-    "image": "https://m.media-amazon.com/images/I/61LWj7Pjt1L._AC_SX679_.jpg",
+    "image": "https://m.media-amazon.com/images/I/61CESMmWoIL._SL1500_.jpg",
     "description": "Premium Sennheiser audio device delivering exceptional sound quality and craftsmanship for the discerning audiophile.",
     "tags": ["audio", "headphones", "sennheiser", "premium", "like-new", "audiophile"]
   },
@@ -114,7 +114,7 @@ export const products = [
     "color": "Forest Green",
     "rating": 4.0,
     "stock": 5,
-    "image": "https://m.media-amazon.com/images/I/7120GgUKj3L._AC_SX679_.jpg",
+    "image": "https://m.media-amazon.com/images/I/51AOFHoIPyL._SL1353_.jpg",
     "description": "Iconic Apple AirPods with effortless pairing, reliable wireless performance, and compact design. Great entry into the Apple ecosystem.",
     "tags": ["audio", "earbuds", "apple", "airpods", "fair-condition", "low-stock", "discount"]
   },
@@ -148,7 +148,7 @@ export const products = [
     "color": "Silver",
     "rating": 4.8,
     "stock": 24,
-    "image": "https://m.media-amazon.com/images/I/71oPyrrAfhL._AC_SX679_.jpg",
+    "image": "https://m.media-amazon.com/images/I/81I5kJpfCQL._SL1500_.jpg",
     "description": "Flagship Samsung Galaxy S22 Ultra with maximum specs including 32GB RAM and 1TB storage. Premium Android experience.",
     "tags": ["smartphone", "samsung", "galaxy-s22-ultra", "flagship", "like-new", "high-spec", "1tb"]
   },
@@ -165,7 +165,7 @@ export const products = [
     "color": "Midnight",
     "rating": 3.6,
     "stock": 17,
-    "image": "https://m.media-amazon.com/images/I/71y5hX+5CUL._AC_SX679_.jpg",
+    "image": "https://m.media-amazon.com/images/I/71qxj-OeOWL._SL1500_.jpg",
     "description": "Versatile Lenovo tablet with smart dock functionality. Great for media consumption and home automation at an incredible price.",
     "tags": ["tablet", "lenovo", "smart-tab-m10", "android", "heavy-discount", "popular"]
   },
@@ -199,7 +199,7 @@ export const products = [
     "color": "Forest Green",
     "rating": 4.2,
     "stock": 44,
-    "image": "https://m.media-amazon.com/images/I/51lNZLhQxPL._AC_SX679_.jpg",
+    "image": "https://m.media-amazon.com/images/I/613LzNDcKxL._SL1000_.jpg",
     "description": "Next-gen PlayStation 5 at an incredible price. Despite condition issues, it offers access to the best PS5 gaming library.",
     "tags": ["gaming", "console", "playstation", "sony", "ps5", "disc-version", "heavy-discount", "poor-condition"]
   },
@@ -216,7 +216,7 @@ export const products = [
     "color": "Cloud White",
     "rating": 4.7,
     "stock": 14,
-    "image": "https://m.media-amazon.com/images/I/61SU3eQrXRL._AC_SX679_.jpg",
+    "image": "https://m.media-amazon.com/images/I/51NQwrNkWvL._SL1500_.jpg",
     "description": "Top-tier Bose noise-cancelling headphones with industry-leading ANC, premium build quality, and exceptional audio performance.",
     "tags": ["audio", "headphones", "bose", "noise-cancelling", "premium", "like-new", "popular"]
   },
@@ -233,7 +233,7 @@ export const products = [
     "color": "Navy Blue",
     "rating": 4.7,
     "stock": 36,
-    "image": "https://m.media-amazon.com/images/I/71cW4mz0LsL._AC_SX679_.jpg",
+    "image": "https://m.media-amazon.com/images/I/61d9GjVgIpL._SL1443_.jpg",
     "description": "Professional-grade Canon EOS R6 mirrorless camera with outstanding low-light performance and versatile features.",
     "tags": ["camera", "canon", "eos-r6", "mirrorless", "professional", "good-condition", "popular"]
   },
