@@ -13,7 +13,7 @@ export default function ProductDetail() {
   useEffect(() => {
     if (!product) return
    
-
+console.log('Tracking product view:', product)
      window.vision?.track('product_view', {
        title: document.title,
       screenWidth: window.innerWidth,
@@ -21,8 +21,8 @@ export default function ProductDetail() {
       productId: product.id, 
       position: product.id,
       name: product.name,
-      category: product.name,
-      subCategory :product.name,
+      category: product.category,
+      subCategory :product.subCategory,
       brand: product.brand,
       color: product.color,
       condition : product.condition,
@@ -41,7 +41,8 @@ export default function ProductDetail() {
     "price": product.price,
     "source": "product_page",
     "category": product.category,
-    "subCategory": product.subCategory
+    "subCategory": product.subCategory,
+    "name": product.name,
     })
 
     addToCart(product)
