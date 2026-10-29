@@ -71,6 +71,21 @@ class SessionRecorder {
     return id
   }
 
+  // A login is a new recording session. Session ids live in sessionStorage so a page
+  // refresh keeps the same session, but they must not survive a logout, otherwise the
+  // next login in this tab would be appended to the previous session's recording.
+  _clearSessionIds() {
+    try {
+      const prefix = `rr_session_id_${this.projectId}_`
+      for (let i = sessionStorage.length - 1; i >= 0; i--) {
+        const key = sessionStorage.key(i)
+        if (key && key.startsWith(prefix)) sessionStorage.removeItem(key)
+      }
+    } catch (err) {
+      console.warn('[recorder] failed to clear session ids:', err.message)
+    }
+  }
+
   isAllowed(pathname) {
     return ALLOWED_ROUTES.some((re) => re.test(pathname))
   }
@@ -151,6 +166,11 @@ class SessionRecorder {
       this.stop()
       this.start(pathname)
     }
+
+    // Logged out: the final chunk was just flushed by stop() above, so the old
+    // session id can go. Visiting a non-recorded page while logged in does NOT
+    // reach this, so that session continues when the user comes back.
+    if (!userId) this._clearSessionIds()
   }
 }
 
