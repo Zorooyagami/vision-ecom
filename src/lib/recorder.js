@@ -15,6 +15,12 @@ const FLUSH_INTERVAL_MS = 5000
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '')
 const API_URL = `${API_BASE_URL}/api/record/ingest`
 
+// The analytics SDK (vision.js) keeps its session id in this sessionStorage key and
+// stamps it on every live event. The recorder reads and writes the SAME key, so a live
+// feed row and its recording share one session id. That is the only link the dashboard
+// has for guests, whose analytics events carry no user id.
+const SDK_SESSION_KEY = 'vision_session_id'
+
 function resolveProjectId() {
   return document.querySelector('script[data-project-id]')
     ?.getAttribute('data-project-id')?.trim() || null
@@ -50,6 +56,23 @@ class SessionRecorder {
     }
   }
 
+  _readSdkSessionId() {
+    try {
+      return sessionStorage.getItem(SDK_SESSION_KEY) || null
+    } catch {
+      return null
+    }
+  }
+
+  // The SDK reads this key on every event, so after a reset its events follow the new session.
+  _publishSessionId() {
+    try {
+      sessionStorage.setItem(SDK_SESSION_KEY, this.sessionId)
+    } catch {
+      // Without storage the ids simply can't be linked; recording still works.
+    }
+  }
+
   _syncIdentity() {
     const authUserId = this._getLoggedInUserId()
     if (!this.context) {
@@ -66,8 +89,11 @@ class SessionRecorder {
     const reset = !this.context ||
       (this.context.authUserId !== null && this.context.authUserId !== authUserId)
     if (reset) {
+      const firstInTab = !this.context
       this.context = {
-        sessionId: crypto.randomUUID(),
+        // First recording in this tab adopts the id the SDK already issued, so events
+        // sent before recording started still belong to it. After a logout a new id is made.
+        sessionId: (firstInTab && this._readSdkSessionId()) || crypto.randomUUID(),
         anonymousId: `guest_${crypto.randomUUID()}`,
         authUserId,
       }
@@ -77,6 +103,7 @@ class SessionRecorder {
 
     this.sessionId = this.context.sessionId
     this.userId = authUserId || this.context.anonymousId
+    this._publishSessionId()
     this._saveContext()
   }
 
